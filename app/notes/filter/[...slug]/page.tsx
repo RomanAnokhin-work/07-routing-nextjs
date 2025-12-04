@@ -1,4 +1,4 @@
-import Notes from "@/app/notes/Notes.client";
+import Notes from "@/app/notes/filter/[...slug]/Notes.client";
 
 const NotesByTagPage = () => {
   return <Notes />;
