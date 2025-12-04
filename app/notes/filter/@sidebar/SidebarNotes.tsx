@@ -1,8 +1,11 @@
 import css from "./SidebarNotes.module.css";
 import Link from "next/link";
-import { tags } from "@/constants/tags";
 
-function SidebarNotes() {
+interface SidebarNotesProps {
+  tags: string[];
+}
+
+function SidebarNotes({ tags }: SidebarNotesProps) {
   return (
     <ul className={css.menuList}>
       {/* список тегів */}

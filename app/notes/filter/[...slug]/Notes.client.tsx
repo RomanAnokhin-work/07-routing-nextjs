@@ -11,18 +11,19 @@ import Modal from "@/components/Modal/Modal";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import { useDebouncedCallback } from "use-debounce";
 import NoteForm from "@/components/NoteForm/NoteForm";
-import { useParams } from "next/navigation";
 
-function App() {
-  const params = useParams();
+interface NotesProps {
+  tag?: string;
+}
 
+export default function Notes({ tag }: NotesProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const { data } = useQuery({
-    queryKey: ["notes", currentPage, searchQuery, params.slug],
-    queryFn: () => fetchNotes(currentPage, searchQuery, params.slug?.[0]),
+    queryKey: ["notes", currentPage, searchQuery, tag],
+    queryFn: () => fetchNotes(currentPage, searchQuery, tag),
     placeholderData: keepPreviousData,
   });
 
@@ -33,26 +34,21 @@ function App() {
     setCurrentPage(pageNum);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const handleSearchChange = useDebouncedCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setCurrentPage(1);
       setSearchQuery(event.target.value);
     },
-    300
+    300,
   );
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        {<SearchBox onChange={handleSearchChange} />}
+        <SearchBox onChange={handleSearchChange} />
         {totalPages > 1 && (
           <Pagination
             page={currentPage}
@@ -60,13 +56,13 @@ function App() {
             setPage={setPage}
           />
         )}
-        {
-          <button className={css.button} onClick={openModal}>
-            Create note +
-          </button>
-        }
+        <button className={css.button} onClick={openModal}>
+          Create note +
+        </button>
       </header>
+
       {notes.length > 0 && <NoteList notes={notes} />}
+
       {isModalOpen && (
         <Modal onClose={closeModal}>
           <NoteForm onClose={closeModal} />
@@ -75,5 +71,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
