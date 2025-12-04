@@ -21,8 +21,8 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const { data } = useQuery({
-    queryKey: ["notes", currentPage, searchQuery, params.tag],
-    queryFn: () => fetchNotes(currentPage, searchQuery, params.tag?.[0]),
+    queryKey: ["notes", currentPage, searchQuery, params.slug],
+    queryFn: () => fetchNotes(currentPage, searchQuery, params.slug?.[0]),
     placeholderData: keepPreviousData,
   });
 
@@ -46,7 +46,7 @@ function App() {
       setCurrentPage(1);
       setSearchQuery(event.target.value);
     },
-    300,
+    300
   );
 
   return (
